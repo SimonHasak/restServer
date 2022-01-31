@@ -1,4 +1,4 @@
-import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -8,11 +8,16 @@ public class Api {
 
     private static final Service service = new Service();
 
-    public void baseMethod(String scriptName, Map<String, String> parameters) {
+    public boolean userExecutor(Map<String, String> parameters) {
 
-        // get rootPassword from config.properties
-
-        service.callScript(scriptName, parameters);
+        return service.executeUser(parameters);
     }
+
+    public List<String> networkExecutor(Map<String, String> parameters) {
+
+        return service.executeNetwork(parameters);
+    }
+
+    // pouzivatelia, sietove interfacy, servisy => ciel (mvp)
 
 }

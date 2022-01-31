@@ -1,5 +1,9 @@
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
+import executor.Executor;
+import factory.ExecutorFactory;
+import manager.NetworkManager;
+import manager.UserManager;
+
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -7,32 +11,27 @@ import java.util.Map;
  */
 public class Service {
 
-    public void callScript(String scriptName, Map<String, String> parameters) {
-        try {
-            ProcessBuilder pb = new ProcessBuilder("scripts/" + scriptName);
+    private final Executor executor;
 
-            Map<String, String> env = pb.environment();
-            env.putAll(parameters);
+    private final UserManager userManager;
+    private final NetworkManager networkManager;
 
-            Process proc = pb.start();
+    public Service() {
+        this.executor = ExecutorFactory.of("linux");
 
-            BufferedReader read = new BufferedReader(new InputStreamReader(
-                    proc.getInputStream()));
-            try {
-                proc.waitFor();
-            } catch (InterruptedException e) {
-                System.out.println(e.getMessage());
-            }
-            while (read.ready()) {
-                System.out.println(read.readLine());
-            }
-
-            proc.waitFor();
-            System.out.println("Script " + scriptName + " executed successfully");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        this.userManager = new UserManager(this.executor);
+        this.networkManager = new NetworkManager(this.executor);
     }
 
+
+    public boolean executeUser(Map<String, String> parameters) {
+
+        return this.userManager.getUserExecutor().executeUser();
+    }
+
+    public List<String> executeNetwork(Map<String, String> parameters) {
+
+        return this.networkManager.getNetworkExecutor().executeNetwork();
+    }
 
 }

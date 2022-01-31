@@ -1,4 +1,5 @@
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -15,13 +16,14 @@ public class Main {
     public static void main(String[] args) {
         System.out.println("Hello world");
 
-//        String[] env = {"PATH=/bin:/usr/bin/"};
-//        String cmd = "you complete shell command";  //e.g test.sh -dparam1 -oout.txt
-
         Map<String, String> parameters = new HashMap<String, String>();
         parameters.put("USER_NAME", "John Doe");
 
-        api.baseMethod("test.sh", parameters);
+        boolean userExe = api.userExecutor(parameters);
+        List<String> networkExe = api.networkExecutor(parameters);
+
+        System.out.println(userExe);
+        System.out.println(networkExe);
 
     }
 }
